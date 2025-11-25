@@ -24,9 +24,9 @@ def inicializar_galletas():
     total = cursor.fetchone()[0]
     if total == 0:
         frases = [
-            "Todo saldrá bien.",
+            "No dejes que lo que no puedes controlar te controle.",
             "La paciencia es una virtud.",
-            "La suerte está de tu lado."
+            "Evita tomar jugo de naranja después de lavarte los dientes."
         ]
         for frase in frases:
             cursor.execute("INSERT INTO galletas (frase) VALUES (?)", (frase,))

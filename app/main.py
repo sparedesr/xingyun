@@ -3,6 +3,9 @@ from pydantic import BaseModel
 import random
 from app.database import crear_tabla, inicializar_galletas, obtener_galletas, cursor, conn
 
+# Aplicación desplegada en https://xingyun-production.up.railway.app/
+# Disponible en https://github.com/sparedesr/xingyun
+
 app = FastAPI(title="Galletas de la Fortuna")
 
 # Inicializar base de datos al arrancar
