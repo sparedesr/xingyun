@@ -1,25 +1,38 @@
+import os
 import sqlite3
 
-# Crear o conectar a la base de datos
-conn = sqlite3.connect("galletas.db", check_same_thread=False)
+# Ruta absoluta dentro de la carpeta app
+DB_PATH = os.path.join(os.path.dirname(__file__), "galletas.db")
+
+# Conexión y cursor
+conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 cursor = conn.cursor()
 
-# Crear tabla de galletas si no existe
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS galletas (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    frase TEXT NOT NULL
-)
-""")
-conn.commit()
-
-# Insertar 2-3 frases predefinidas si la tabla está vacía
-cursor.execute("SELECT COUNT(*) FROM galletas")
-if cursor.fetchone()[0] == 0:
-    frases_iniciales = [
-        "La paciencia es una virtud.",
-        "Hoy es un buen día para sonreír.",
-        "Confía en tu intuición."
-    ]
-    cursor.executemany("INSERT INTO galletas (frase) VALUES (?)", [(f,) for f in frases_iniciales])
+# Función para crear la tabla si no existe
+def crear_tabla():
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS galletas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        frase TEXT NOT NULL
+    )
+    """)
     conn.commit()
+
+# Función para insertar galletas iniciales si la tabla está vacía
+def inicializar_galletas():
+    cursor.execute("SELECT COUNT(*) FROM galletas")
+    total = cursor.fetchone()[0]
+    if total == 0:
+        frases = [
+            "Todo saldrá bien.",
+            "La paciencia es una virtud.",
+            "La suerte está de tu lado."
+        ]
+        for frase in frases:
+            cursor.execute("INSERT INTO galletas (frase) VALUES (?)", (frase,))
+        conn.commit()
+
+# Función para obtener todas las galletas
+def obtener_galletas():
+    cursor.execute("SELECT frase FROM galletas")
+    return [fila[0] for fila in cursor.fetchall()]

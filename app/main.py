@@ -1,11 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import random
-from app.database import cursor, conn
+from app.database import crear_tabla, inicializar_galletas, obtener_galletas, cursor, conn
 
 app = FastAPI(title="Galletas de la Fortuna")
 
-# Modelo para recibir la galleta en POST
+# Inicializar base de datos al arrancar
+@app.on_event("startup")
+def startup():
+    crear_tabla()
+    inicializar_galletas()
+
+# Modelo para POST
 class Galleta(BaseModel):
     frase: str
 
@@ -17,9 +23,8 @@ def agregar_galleta(galleta: Galleta):
 
 @app.get("/consultar_galleta")
 def consultar_galleta():
-    cursor.execute("SELECT frase FROM galletas")
-    todas = cursor.fetchall()
+    todas = obtener_galletas()
     if not todas:
         raise HTTPException(status_code=404, detail="No hay galletas disponibles")
-    seleccionada = random.choice(todas)[0]
+    seleccionada = random.choice(todas)
     return {"galleta": seleccionada}
