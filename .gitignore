@@ -1,0 +1,14 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+# Entorno virtual
+venv/
+
+# Base de datos local SQLite
+*.db
+
+# Archivos de VS Code
+.vscode/
+
+# Archivos de Python compilados
+__pycache__/
+*.pyc
+
